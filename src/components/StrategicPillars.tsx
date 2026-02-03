@@ -42,8 +42,8 @@ const StrategicPillars = () => {
         </div>
 
         {/* Bento Grid */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {projects.map((project) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto auto-rows-[280px]">
+          {projects.map((project, index) => (
             <PillarCard
               key={project.id}
               icon={<TrendingUp size={24} />}
@@ -55,6 +55,8 @@ const StrategicPillars = () => {
               imageUrl={project.image_url}
               size={project.size as "large" | "medium" | "small"}
               techStack={project.tech_stack}
+              index={index}
+              totalCards={projects.length}
             />
           ))}
         </div>
