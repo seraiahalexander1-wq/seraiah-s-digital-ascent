@@ -42,11 +42,6 @@ const PillarCard = ({
       
       {/* Content */}
       <div className={`relative z-10 h-full flex flex-col justify-end ${size === 'large' ? 'p-10' : 'p-6'}`}>
-        {/* Metric Badge */}
-        <div className="absolute top-4 right-4 bg-background/95 backdrop-blur-sm rounded-full px-4 py-2 shadow-organic">
-          <span className="font-serif text-lg font-medium text-primary">{metric}</span>
-          <span className="text-sm text-muted-foreground ml-1">{metricLabel}</span>
-        </div>
 
         <h3 className={`font-serif text-primary-foreground mb-3 font-semibold ${size === 'large' ? 'text-4xl' : 'text-2xl'}`}>
           {title}
