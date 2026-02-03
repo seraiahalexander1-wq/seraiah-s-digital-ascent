@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ArticleCard from "./ArticleCard";
+import { useArticles } from "@/hooks/useArticles";
 
 const categories = [
   "All",
@@ -9,57 +10,13 @@ const categories = [
   "Compliance",
 ];
 
-const articles = [
-  {
-    title: "The Science of Metabolic Flexibility",
-    summary: "How understanding metabolic adaptation can transform supplement marketing and consumer trust.",
-    tags: ["Metabolic Health", "SEO & Growth"],
-    imageUrl: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=800&auto=format&fit=crop",
-    articleUrl: "#metabolic-flexibility",
-  },
-  {
-    title: "NCAA NIL Compliance: A Content Strategy Framework",
-    summary: "Navigating the complex landscape of Name, Image, and Likeness regulations through clear communication.",
-    tags: ["Compliance", "Education Strategy"],
-    imageUrl: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&auto=format&fit=crop",
-    articleUrl: "#ncaa-nil-compliance",
-  },
-  {
-    title: "Building AI-Native SaaS: Lessons from ClassOptic",
-    summary: "From concept to MVP using Cursor, React, and Supabase—a founder's technical journey.",
-    tags: ["SEO & Growth"],
-    imageUrl: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop",
-    articleUrl: "#ai-native-saas",
-  },
-  {
-    title: "Data-Driven Content for EdTech Platforms",
-    summary: "How ZenEducate transformed complex educational metrics into actionable insights for schools.",
-    tags: ["Education Strategy"],
-    imageUrl: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&auto=format&fit=crop",
-    articleUrl: "#edtech-content",
-  },
-  {
-    title: "The 22k Subscriber Playbook",
-    summary: "A deep dive into the organic growth strategies that scaled Shroomer from zero to engaged community.",
-    tags: ["SEO & Growth", "Metabolic Health"],
-    imageUrl: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=800&auto=format&fit=crop",
-    articleUrl: "#subscriber-playbook",
-  },
-  {
-    title: "Regulatory Communication in Wellness Brands",
-    summary: "Balancing FDA compliance with compelling storytelling in the supplement industry.",
-    tags: ["Compliance", "Metabolic Health"],
-    imageUrl: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?w=800&auto=format&fit=crop",
-    articleUrl: "#regulatory-communication",
-  },
-];
-
 const KnowledgeHub = () => {
   const [activeFilter, setActiveFilter] = useState("All");
+  const { data: articles, isLoading } = useArticles(true);
 
   const filteredArticles = activeFilter === "All"
     ? articles
-    : articles.filter((article) => article.tags.includes(activeFilter));
+    : articles?.filter((article) => article.tags.includes(activeFilter as any));
 
   return (
     <section id="gallery" className="py-32 bg-secondary/50">
@@ -90,13 +47,27 @@ const KnowledgeHub = () => {
         </div>
 
         {/* Articles Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {filteredArticles.map((article, index) => (
-            <ArticleCard key={index} {...article} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center py-12">
+            <div className="animate-pulse text-muted-foreground">Loading articles...</div>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {filteredArticles?.map((article) => (
+              <ArticleCard 
+                key={article.id} 
+                title={article.title}
+                summary={article.summary}
+                tags={article.tags}
+                imageUrl={article.image_url}
+                articleUrl={article.article_url || "#"}
+                readTime={article.read_time}
+              />
+            ))}
+          </div>
+        )}
 
-        {filteredArticles.length === 0 && (
+        {filteredArticles?.length === 0 && !isLoading && (
           <p className="text-center text-muted-foreground py-12">
             No articles found for this category.
           </p>
