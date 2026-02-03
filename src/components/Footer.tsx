@@ -15,10 +15,10 @@ const Footer = () => {
             <span className="font-serif text-xl font-medium text-primary">
               {headline}<span className="text-accent">.</span>
             </span>
-            <p className="text-sm text-muted-foreground">{tagline}</p>
+            <span className="text-sm text-muted-foreground">{tagline}</span>
           </div>
 
-          <p className="text-sm text-muted-foreground order-last md:order-none">{bodyText}</p>
+          <span className="text-sm text-muted-foreground order-last md:order-none">{bodyText}</span>
 
           <a
             href="https://www.linkedin.com/in/seraiahalexander"
