@@ -30,10 +30,8 @@ const Hero = () => {
             <span className="text-sm text-muted-foreground font-medium tracking-wide">{badge}</span>
           </div>
 
-          <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight text-primary mb-10 leading-[1.1]">
-            {headline.split(" for ")[0]}
-            <br />
-            <span className="text-gradient italic">for {headline.split(" for ")[1] || "High-Stakes Brands"}</span>
+          <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight mb-10 leading-[1.1] text-gradient">
+            {headline}
           </h1>
 
           <div 
