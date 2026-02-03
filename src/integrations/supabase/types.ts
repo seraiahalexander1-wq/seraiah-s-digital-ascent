@@ -56,6 +56,45 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio_content: {
+        Row: {
+          body_text: string | null
+          created_at: string
+          cta_link: string | null
+          cta_text: string | null
+          headline: string | null
+          id: string
+          image_url: string | null
+          metadata: Json | null
+          section_id: string
+          updated_at: string
+        }
+        Insert: {
+          body_text?: string | null
+          created_at?: string
+          cta_link?: string | null
+          cta_text?: string | null
+          headline?: string | null
+          id?: string
+          image_url?: string | null
+          metadata?: Json | null
+          section_id: string
+          updated_at?: string
+        }
+        Update: {
+          body_text?: string | null
+          created_at?: string
+          cta_link?: string | null
+          cta_text?: string | null
+          headline?: string | null
+          id?: string
+          image_url?: string | null
+          metadata?: Json | null
+          section_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
