@@ -1,24 +1,11 @@
 import { usePortfolioSection } from "@/hooks/usePortfolioContent";
 
-interface QuickStat {
-  label: string;
-  value: string;
-}
-
 const AboutMe = () => {
   const { data: aboutContent, isLoading } = usePortfolioSection("about_me");
 
   const headline = aboutContent?.headline || "Strategist, Builder, and Occasional Forager.";
   const bodyText = aboutContent?.body_text || "";
   const imageUrl = aboutContent?.image_url || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=800&fit=crop";
-  
-  const quickStats: QuickStat[] = (aboutContent?.metadata as { quick_stats?: QuickStat[] })?.quick_stats || [
-    { label: "Current Focus", value: "Building ClassOptic / Scaling Wellness Brands" },
-    { label: "Field Work", value: "Mycology & Foraging (Santa Cruz)" },
-    { label: "Training", value: "Squat & Bench focus" },
-    { label: "Travel", value: "16+ countries" },
-  ];
-
 
   if (isLoading) {
     return (
@@ -70,27 +57,6 @@ const AboutMe = () => {
                 prose-li:text-foreground/80"
               dangerouslySetInnerHTML={{ __html: bodyText }}
             />
-
-            {/* Quick Stats */}
-            <div className="pt-6">
-              <div className="border-l-2 border-accent pl-6 space-y-4">
-                <h3 className="font-serif text-xl text-primary font-medium mb-4">
-                  Quick Stats
-                </h3>
-                <ul className="space-y-3">
-                  {quickStats.map((stat, index) => (
-                    <li key={index} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                      <span className="text-sm font-medium text-accent uppercase tracking-wide">
-                        {stat.label}:
-                      </span>
-                      <span className="text-foreground/80">
-                        {stat.value}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
       </div>
