@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
+import BrandCarousel from "@/components/BrandCarousel";
 import StrategicPillars from "@/components/StrategicPillars";
 import KnowledgeHub from "@/components/KnowledgeHub";
 import TechnicalSkills from "@/components/TechnicalSkills";
@@ -11,6 +12,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <Hero />
+      <BrandCarousel />
       <StrategicPillars />
       <KnowledgeHub />
       <TechnicalSkills />
