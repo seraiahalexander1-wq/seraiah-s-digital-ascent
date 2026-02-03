@@ -21,7 +21,7 @@ const Footer = () => {
           <p className="text-sm text-muted-foreground order-last md:order-none">{bodyText}</p>
 
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/seraiahalexander"
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-muted-foreground hover:text-primary transition-colors"
