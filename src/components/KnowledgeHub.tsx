@@ -2,7 +2,13 @@ import { useState } from "react";
 import ArticleCard from "./ArticleCard";
 import { useArticles } from "@/hooks/useArticles";
 import { usePortfolioSection } from "@/hooks/usePortfolioContent";
-const categories = ["All", "Metabolic Health", "Education Strategy", "SEO & Growth", "Compliance"];
+const categories = [
+  { label: "All", value: "All" },
+  { label: "Health & Wellness", value: "Metabolic Health" },
+  { label: "Education Strategy", value: "Education Strategy" },
+  { label: "SEO & Growth", value: "SEO & Growth" },
+  { label: "Compliance", value: "Compliance" }
+];
 const KnowledgeHub = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const {
@@ -15,7 +21,9 @@ const KnowledgeHub = () => {
   const label = headerContent?.metadata?.label || "Insights";
   const headline = headerContent?.headline || "Knowledge Hub";
   const bodyText = headerContent?.body_text || "Insights, case studies, and strategic thinking across industries.";
-  const filteredArticles = activeFilter === "All" ? articles : articles?.filter(article => article.tags.includes(activeFilter as any));
+  const activeCategory = categories.find(c => c.label === activeFilter);
+  const filterValue = activeCategory?.value || "All";
+  const filteredArticles = filterValue === "All" ? articles : articles?.filter(article => article.tags.includes(filterValue as any));
   return <section id="gallery" className="py-32 bg-secondary/50">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
@@ -28,8 +36,8 @@ const KnowledgeHub = () => {
 
         {/* Filter Bar - Enhanced Visibility */}
         <div className="flex flex-wrap justify-center gap-4 mb-16">
-          {categories.map(category => <button key={category} onClick={() => setActiveFilter(category)} className={`px-6 py-3 rounded-full text-sm font-semibold uppercase tracking-wide transition-all duration-300 ${activeFilter === category ? "bg-accent text-accent-foreground shadow-organic" : "bg-card border-2 border-border text-muted-foreground hover:text-primary hover:border-accent/50"}`}>
-              {category}
+          {categories.map(category => <button key={category.label} onClick={() => setActiveFilter(category.label)} className={`px-6 py-3 rounded-full text-sm font-semibold uppercase tracking-wide transition-all duration-300 ${activeFilter === category.label ? "bg-accent text-accent-foreground shadow-organic" : "bg-card border-2 border-border text-muted-foreground hover:text-primary hover:border-accent/50"}`}>
+              {category.label}
             </button>)}
         </div>
 
