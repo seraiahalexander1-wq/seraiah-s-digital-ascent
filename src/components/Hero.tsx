@@ -36,9 +36,12 @@ const Hero = () => {
             <span className="text-gradient italic">for {headline.split(" for ")[1] || "High-Stakes Brands"}</span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-16 leading-relaxed font-light">
-            {bodyText}
-          </p>
+          <div 
+            className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-16 leading-relaxed font-light
+              prose prose-lg max-w-none
+              prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:m-0"
+            dangerouslySetInnerHTML={{ __html: bodyText }}
+          />
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
             <a
