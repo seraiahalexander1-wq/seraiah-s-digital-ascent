@@ -2,29 +2,29 @@ import { Sparkles, Database, Search, Mail, FileText } from "lucide-react";
 
 const skills = [
   {
-    icon: <Sparkles size={20} />,
-    label: "AI-Native Workflows",
+    icon: <Sparkles size={22} />,
+    name: "AI-Native Workflows",
     tools: "Cursor, Gemini, Claude",
   },
   {
-    icon: <Database size={20} />,
-    label: "Backend & Database",
+    icon: <Database size={22} />,
+    name: "Backend & Data",
     tools: "Supabase, PostgreSQL",
   },
   {
-    icon: <Search size={20} />,
-    label: "SEO & SEM",
-    tools: "Technical SEO, Content Strategy",
+    icon: <Search size={22} />,
+    name: "SEO & SEM",
+    tools: "Ahrefs, Semrush, GSC",
   },
   {
-    icon: <Mail size={20} />,
-    label: "Lifecycle Marketing",
-    tools: "Email, SMS, Automation",
+    icon: <Mail size={22} />,
+    name: "Lifecycle Marketing",
+    tools: "Email, SMS, Klaviyo",
   },
   {
-    icon: <FileText size={20} />,
-    label: "Technical Writing",
-    tools: "Documentation, API Guides",
+    icon: <FileText size={22} />,
+    name: "Technical Writing",
+    tools: "Documentation, APIs",
   },
 ];
 
@@ -32,33 +32,28 @@ const TechnicalSkills = () => {
   return (
     <section id="projects" className="py-24">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Technical Stack</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Modern tools and workflows for building and scaling digital products.
+        <div className="text-center mb-14">
+          <span className="text-accent text-sm font-medium tracking-widest uppercase mb-4 block">Expertise</span>
+          <h2 className="font-serif text-4xl md:text-5xl font-medium text-primary mb-6">Technical Skills</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+            A modern toolkit for building and scaling digital products.
           </p>
         </div>
 
-        {/* Skills Horizontal Scroll */}
-        <div className="relative">
-          <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide snap-x snap-mandatory">
-            {skills.map((skill, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0 snap-start bg-card border border-border rounded-xl p-6 min-w-[280px] hover:border-accent/50 transition-all duration-300 group"
-              >
-                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent mb-4 group-hover:scale-110 transition-transform duration-300">
-                  {skill.icon}
-                </div>
-                <h3 className="font-semibold text-foreground mb-1">{skill.label}</h3>
-                <p className="text-sm text-muted-foreground">{skill.tools}</p>
+        {/* Skills Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-5xl mx-auto">
+          {skills.map((skill, index) => (
+            <div
+              key={index}
+              className="group bg-card border border-border rounded-2xl p-6 text-center hover:border-accent/40 hover:shadow-organic transition-all duration-300"
+            >
+              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-accent mx-auto mb-4 group-hover:bg-accent/10 transition-colors duration-300">
+                {skill.icon}
               </div>
-            ))}
-          </div>
-
-          {/* Fade Edges */}
-          <div className="absolute left-0 top-0 bottom-4 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-4 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none" />
+              <h3 className="font-serif text-sm font-medium text-primary mb-2">{skill.name}</h3>
+              <p className="text-xs text-muted-foreground">{skill.tools}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
