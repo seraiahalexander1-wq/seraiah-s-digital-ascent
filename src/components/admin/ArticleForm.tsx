@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
-import { X } from "lucide-react";
+import { X, Upload, Loader2 } from "lucide-react";
 import { Article, ArticleInput, useCreateArticle, useUpdateArticle, ARTICLE_CATEGORIES } from "@/hooks/useArticles";
 import type { Database } from "@/integrations/supabase/types";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 type ContentCategory = Database["public"]["Enums"]["content_category"];
 
@@ -19,6 +21,9 @@ interface ArticleFormProps {
 const ArticleForm = ({ article, onClose }: ArticleFormProps) => {
   const createArticle = useCreateArticle();
   const updateArticle = useUpdateArticle();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const isEditing = !!article;
 
   const [formData, setFormData] = useState({
@@ -39,6 +44,60 @@ const ArticleForm = ({ article, onClose }: ArticleFormProps) => {
         ? prev.tags.filter(t => t !== tag)
         : [...prev.tags, tag]
     }));
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload an image file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please upload an image smaller than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `article-${Date.now()}.${fileExt}`;
+      const filePath = `articles/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('portfolio-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('portfolio-images')
+        .getPublicUrl(filePath);
+
+      setFormData({ ...formData, image_url: publicUrl });
+      toast({ title: "Image uploaded successfully!" });
+    } catch (error: any) {
+      toast({
+        title: "Upload failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,15 +161,39 @@ const ArticleForm = ({ article, onClose }: ArticleFormProps) => {
             </div>
 
             <div className="col-span-2 space-y-2">
-              <Label htmlFor="image_url">Image URL *</Label>
-              <Input
-                id="image_url"
-                type="url"
-                value={formData.image_url}
-                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                required
-                placeholder="https://..."
-              />
+              <Label htmlFor="image_url">Image *</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="image_url"
+                  type="url"
+                  value={formData.image_url}
+                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                  required
+                  placeholder="https://... or upload an image"
+                  className="flex-1"
+                />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                  className="gap-2 shrink-0"
+                >
+                  {isUploading ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Upload size={16} />
+                  )}
+                  {isUploading ? "Uploading..." : "Upload"}
+                </Button>
+              </div>
               {formData.image_url && (
                 <div 
                   className="w-full h-32 rounded-lg bg-cover bg-center border border-border"
