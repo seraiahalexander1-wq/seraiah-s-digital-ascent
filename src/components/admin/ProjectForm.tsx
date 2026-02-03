@@ -235,25 +235,6 @@ const ProjectForm = ({ project, onClose }: ProjectFormProps) => {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="metric">Metric</Label>
-              <Input
-                id="metric"
-                value={formData.metric}
-                onChange={(e) => setFormData({ ...formData, metric: e.target.value })}
-                placeholder="e.g. 10x"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="metric_label">Metric Label</Label>
-              <Input
-                id="metric_label"
-                value={formData.metric_label}
-                onChange={(e) => setFormData({ ...formData, metric_label: e.target.value })}
-                placeholder="e.g. ROI"
-              />
-            </div>
 
             <div className="col-span-2 space-y-2">
               <Label htmlFor="highlights">Key Highlights (one per line)</Label>
