@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ArticleCard from "./ArticleCard";
 import { useArticles } from "@/hooks/useArticles";
+import { usePortfolioSection } from "@/hooks/usePortfolioContent";
 
 const categories = [
   "All",
@@ -13,6 +14,11 @@ const categories = [
 const KnowledgeHub = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const { data: articles, isLoading } = useArticles(true);
+  const { data: headerContent } = usePortfolioSection("knowledge_header");
+
+  const label = headerContent?.metadata?.label || "Insights";
+  const headline = headerContent?.headline || "Knowledge Hub";
+  const bodyText = headerContent?.body_text || "Insights, case studies, and strategic thinking across industries.";
 
   const filteredArticles = activeFilter === "All"
     ? articles
@@ -22,11 +28,9 @@ const KnowledgeHub = () => {
     <section id="gallery" className="py-32 bg-secondary/50">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="text-accent text-sm font-medium tracking-widest uppercase mb-4 block">Insights</span>
-          <h2 className="font-serif text-5xl md:text-6xl font-semibold text-primary mb-8">Knowledge Hub</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Insights, case studies, and strategic thinking across industries.
-          </p>
+          <span className="text-accent text-sm font-medium tracking-widest uppercase mb-4 block">{label}</span>
+          <h2 className="font-serif text-5xl md:text-6xl font-semibold text-primary mb-8">{headline}</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">{bodyText}</p>
         </div>
 
         {/* Filter Bar - Enhanced Visibility */}

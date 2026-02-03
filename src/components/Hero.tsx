@@ -1,6 +1,18 @@
 import { ArrowDown } from "lucide-react";
+import { usePortfolioSection } from "@/hooks/usePortfolioContent";
 
 const Hero = () => {
+  const { data: heroContent, isLoading } = usePortfolioSection("hero");
+
+  // Fallback content while loading or if no data
+  const headline = heroContent?.headline || "Digital Strategy & Growth for High-Stakes Brands";
+  const bodyText = heroContent?.body_text || "Scaling audiences to 22k+, building AI-native SaaS solutions, and translating complex data into science-backed narratives.";
+  const badge = heroContent?.metadata?.badge || "Available for Strategic Projects";
+  const ctaLink = heroContent?.cta_link || "#pillars";
+  const ctaText = heroContent?.cta_text || "View My Work";
+  const secondaryCta = heroContent?.metadata?.secondary_cta || "#contact";
+  const secondaryCtaText = heroContent?.metadata?.secondary_cta_text || "Get in Touch";
+
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
       {/* Soft Organic Gradient */}
@@ -15,31 +27,31 @@ const Hero = () => {
           {/* Editorial Badge */}
           <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-secondary border border-border mb-12">
             <div className="w-2 h-2 rounded-full bg-accent" />
-            <span className="text-sm text-muted-foreground font-medium tracking-wide">Available for Strategic Projects</span>
+            <span className="text-sm text-muted-foreground font-medium tracking-wide">{badge}</span>
           </div>
 
           <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight text-primary mb-10 leading-[1.1]">
-            Digital Strategy & Growth
+            {headline.split(" for ")[0]}
             <br />
-            <span className="text-gradient italic">for High-Stakes Brands</span>
+            <span className="text-gradient italic">for {headline.split(" for ")[1] || "High-Stakes Brands"}</span>
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-16 leading-relaxed font-light">
-            Scaling audiences to 22k+, building AI-native SaaS solutions, and translating complex data into science-backed narratives.
+            {bodyText}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
             <a
-              href="#pillars"
+              href={ctaLink}
               className="group px-10 py-5 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-all duration-300 shadow-organic hover:shadow-card-hover text-lg"
             >
-              View My Work
+              {ctaText}
             </a>
             <a
-              href="#contact"
+              href={secondaryCta}
               className="px-10 py-5 border-2 border-border text-foreground font-semibold rounded-full hover:bg-secondary transition-all duration-300 text-lg"
             >
-              Get in Touch
+              {secondaryCtaText}
             </a>
           </div>
         </div>

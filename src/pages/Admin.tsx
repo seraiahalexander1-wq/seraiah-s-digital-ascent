@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useProjects, useDeleteProject, CONTENT_CATEGORIES, Project } from "@/hooks/useProjects";
+import { useProjects, useDeleteProject, Project } from "@/hooks/useProjects";
 import { useArticles, useDeleteArticle, Article } from "@/hooks/useArticles";
+import { usePortfolioContent } from "@/hooks/usePortfolioContent";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit2, Trash2, LogOut, Eye, EyeOff } from "lucide-react";
+import { Plus, Edit2, Trash2, LogOut, EyeOff, Layout, FileText, Briefcase } from "lucide-react";
 import ProjectForm from "@/components/admin/ProjectForm";
 import ArticleForm from "@/components/admin/ArticleForm";
+import ContentEditorCard from "@/components/admin/ContentEditorCard";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +24,7 @@ const Admin = () => {
   const { signOut, user } = useAuth();
   const { data: projects, isLoading: projectsLoading } = useProjects(false);
   const { data: articles, isLoading: articlesLoading } = useArticles(false);
+  const { data: portfolioContent, isLoading: contentLoading } = usePortfolioContent();
   const deleteProject = useDeleteProject();
   const deleteArticle = useDeleteArticle();
 
@@ -70,18 +73,44 @@ const Admin = () => {
       <main className="container mx-auto px-6 py-10">
         <div className="mb-10">
           <h1 className="font-serif text-4xl font-semibold text-primary mb-2">Content Manager</h1>
-          <p className="text-muted-foreground">Manage your portfolio projects and knowledge hub articles.</p>
+          <p className="text-muted-foreground">Edit your portfolio content. Changes sync live to your public site.</p>
         </div>
 
-        <Tabs defaultValue="projects" className="space-y-8">
+        <Tabs defaultValue="content" className="space-y-8">
           <TabsList className="bg-secondary">
-            <TabsTrigger value="projects" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="content" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Layout size={16} />
+              Site Content
+            </TabsTrigger>
+            <TabsTrigger value="projects" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Briefcase size={16} />
               Projects ({projects?.length || 0})
             </TabsTrigger>
-            <TabsTrigger value="articles" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="articles" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <FileText size={16} />
               Articles ({articles?.length || 0})
             </TabsTrigger>
           </TabsList>
+
+          {/* Site Content Tab */}
+          <TabsContent value="content" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="font-serif text-2xl font-medium text-primary">Site Sections</h2>
+                <p className="text-sm text-muted-foreground mt-1">Edit headlines, text, and images for each section</p>
+              </div>
+            </div>
+
+            {contentLoading ? (
+              <div className="text-center py-12 text-muted-foreground">Loading content...</div>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-6">
+                {portfolioContent?.map((content) => (
+                  <ContentEditorCard key={content.id} content={content} />
+                ))}
+              </div>
+            )}
+          </TabsContent>
 
           {/* Projects Tab */}
           <TabsContent value="projects" className="space-y-6">
