@@ -20,32 +20,14 @@ const Footer = () => {
 
           <p className="text-sm text-muted-foreground order-last md:order-none">{bodyText}</p>
 
-          <div className="flex items-center gap-6">
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              LinkedIn
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              Twitter
-            </a>
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              GitHub
-            </a>
-          </div>
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors"
+          >
+            LinkedIn
+          </a>
         </div>
       </div>
     </footer>
