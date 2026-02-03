@@ -58,11 +58,15 @@ const Hero = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="p-3 rounded-full bg-secondary border border-border">
+        <button
+          onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer z-0"
+          aria-label="Scroll to next section"
+        >
+          <div className="p-3 rounded-full bg-secondary border border-border hover:bg-accent/10 transition-colors">
             <ArrowDown className="text-muted-foreground" size={20} />
           </div>
-        </div>
+        </button>
       </div>
     </section>
   );
