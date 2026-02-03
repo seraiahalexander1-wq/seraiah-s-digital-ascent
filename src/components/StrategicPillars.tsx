@@ -41,9 +41,9 @@ const StrategicPillars = () => {
           <div className="text-muted-foreground max-w-2xl mx-auto text-lg prose prose-p:m-0" dangerouslySetInnerHTML={{ __html: bodyText }} />
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto auto-rows-[280px]">
-          {projects.map((project, index) => (
+        {/* 2-Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 max-w-5xl mx-auto">
+          {projects.map((project) => (
             <PillarCard
               key={project.id}
               icon={<TrendingUp size={24} />}
@@ -53,10 +53,7 @@ const StrategicPillars = () => {
               metric={project.metric || ""}
               metricLabel={project.metric_label || ""}
               imageUrl={project.image_url}
-              size={project.size as "large" | "medium" | "small"}
               techStack={project.tech_stack}
-              index={index}
-              totalCards={projects.length}
             />
           ))}
         </div>
