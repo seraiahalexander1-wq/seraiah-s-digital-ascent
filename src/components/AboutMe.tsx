@@ -19,8 +19,6 @@ const AboutMe = () => {
     { label: "Travel", value: "16+ countries" },
   ];
 
-  // Split body text into paragraphs
-  const paragraphs = bodyText.split('\n\n').filter(Boolean);
 
   if (isLoading) {
     return (
@@ -62,20 +60,16 @@ const AboutMe = () => {
               {headline}
             </h2>
 
-            {/* Bio Paragraphs */}
-            <div className="space-y-6">
-              {paragraphs.length > 0 ? (
-                paragraphs.map((paragraph, index) => (
-                  <p key={index} className="text-lg text-foreground/80 leading-relaxed">
-                    {paragraph}
-                  </p>
-                ))
-              ) : (
-                <p className="text-lg text-foreground/80 leading-relaxed">
-                  {bodyText}
-                </p>
-              )}
-            </div>
+            {/* Bio Content */}
+            <div 
+              className="prose prose-lg max-w-none text-foreground/80 leading-relaxed
+                prose-p:text-foreground/80 prose-p:leading-relaxed
+                prose-strong:text-foreground prose-strong:font-semibold
+                prose-em:text-foreground/80
+                prose-ul:text-foreground/80 prose-ol:text-foreground/80
+                prose-li:text-foreground/80"
+              dangerouslySetInnerHTML={{ __html: bodyText }}
+            />
 
             {/* Quick Stats */}
             <div className="pt-6">
