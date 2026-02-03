@@ -1,7 +1,19 @@
 import { useState } from "react";
-import { Mail, ArrowRight, Send } from "lucide-react";
+import { Mail, ArrowRight } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { usePortfolioSection } from "@/hooks/usePortfolioContent";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100),
+  email: z.string().trim().email("Please enter a valid email").max(255),
+  subject: z.string().trim().max(200),
+  message: z.string().trim().min(1, "Message is required").max(1000),
+});
 
 const ContactSection = () => {
+  const { toast } = useToast();
+  const { data: contactContent } = usePortfolioSection("contact");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -9,16 +21,42 @@ const ContactSection = () => {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const label = contactContent?.metadata?.label || "Let's Connect";
+  const headline = contactContent?.headline || "Start a Conversation";
+  const bodyText = contactContent?.body_text || "Have a project in mind? Let's discuss how we can work together.";
+  const ctaText = contactContent?.cta_text || "Send Message";
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    try {
+      contactSchema.parse(formData);
+      setErrors({});
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) fieldErrors[err.path[0] as string] = err.message;
+        });
+        setErrors(fieldErrors);
+        return;
+      }
+    }
+
     setIsSubmitting(true);
+    
     // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setFormData({ name: "", email: "", subject: "", message: "" });
-      alert("Thanks for reaching out! I'll get back to you soon.");
-    }, 1000);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    toast({
+      title: "Message sent!",
+      description: "Thank you for reaching out. I'll get back to you soon.",
+    });
+    
+    setFormData({ name: "", email: "", subject: "", message: "" });
+    setIsSubmitting(false);
   };
 
   return (
@@ -26,11 +64,9 @@ const ContactSection = () => {
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
-            <span className="text-accent text-sm font-medium tracking-widest uppercase mb-4 block">Let's Connect</span>
-            <h2 className="font-serif text-4xl md:text-5xl font-medium text-primary mb-6">Start a Conversation</h2>
-            <p className="text-muted-foreground text-lg">
-              Have a project in mind? Let's discuss how we can work together.
-            </p>
+            <span className="text-accent text-sm font-medium tracking-widest uppercase mb-4 block">{label}</span>
+            <h2 className="font-serif text-4xl md:text-5xl font-medium text-primary mb-6">{headline}</h2>
+            <p className="text-muted-foreground text-lg">{bodyText}</p>
           </div>
 
           <div className="bg-card border border-border rounded-3xl p-8 md:p-12 shadow-organic">
@@ -49,6 +85,7 @@ const ContactSection = () => {
                     className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-primary placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
                     placeholder="Jane Smith"
                   />
+                  {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name}</p>}
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-primary mb-2">
@@ -63,6 +100,7 @@ const ContactSection = () => {
                     className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-primary placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
                     placeholder="jane@company.com"
                   />
+                  {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email}</p>}
                 </div>
               </div>
 
@@ -93,6 +131,7 @@ const ContactSection = () => {
                   className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-primary placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all resize-none"
                   placeholder="Tell me about your project..."
                 />
+                {errors.message && <p className="text-sm text-red-600 mt-1">{errors.message}</p>}
               </div>
 
               <button
@@ -101,7 +140,7 @@ const ContactSection = () => {
                 className="group w-full md:w-auto px-8 py-4 bg-primary text-primary-foreground font-medium rounded-full hover:bg-primary/90 transition-all duration-300 shadow-organic hover:shadow-card-hover flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Mail size={18} />
-                {isSubmitting ? "Sending..." : "Send Message"}
+                {isSubmitting ? "Sending..." : ctaText}
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
             </form>
