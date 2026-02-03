@@ -7,38 +7,60 @@ interface PillarCardProps {
   highlights: string[];
   metric: string;
   metricLabel: string;
+  imageUrl: string;
+  size?: "large" | "medium" | "small";
 }
 
-const PillarCard = ({ icon, title, description, highlights, metric, metricLabel }: PillarCardProps) => {
+const PillarCard = ({ 
+  title, 
+  description, 
+  highlights, 
+  metric, 
+  metricLabel, 
+  imageUrl,
+  size = "medium" 
+}: PillarCardProps) => {
+  const sizeClasses = {
+    large: "md:col-span-2 md:row-span-2",
+    medium: "md:col-span-1 md:row-span-1",
+    small: "md:col-span-1 md:row-span-1",
+  };
+
   return (
-    <div className="group relative bg-card border border-border rounded-2xl p-8 hover:border-accent/50 transition-all duration-500 hover:shadow-card overflow-hidden">
-      {/* Hover Glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    <div className={`group relative bg-card border border-border rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-card-hover ${sizeClasses[size]}`}>
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+        style={{ backgroundImage: `url(${imageUrl})` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/70 to-primary/30" />
       
-      {/* Metric Reveal on Hover */}
-      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-        <div className="bg-accent/10 border border-accent/30 rounded-lg px-3 py-1.5">
-          <span className="text-accent font-bold text-sm">{metric}</span>
-          <span className="text-accent/70 text-xs ml-1">{metricLabel}</span>
-        </div>
-      </div>
-
-      <div className="relative z-10">
-        <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent mb-6 group-hover:scale-110 transition-transform duration-300">
-          {icon}
+      {/* Content */}
+      <div className={`relative z-10 h-full flex flex-col justify-end ${size === 'large' ? 'p-10' : 'p-6'}`}>
+        {/* Metric Badge */}
+        <div className="absolute top-4 right-4 bg-background/95 backdrop-blur-sm rounded-full px-4 py-2 shadow-organic">
+          <span className="font-serif text-lg font-medium text-primary">{metric}</span>
+          <span className="text-sm text-muted-foreground ml-1">{metricLabel}</span>
         </div>
 
-        <h3 className="text-xl font-semibold text-foreground mb-3">{title}</h3>
-        <p className="text-muted-foreground mb-6 leading-relaxed">{description}</p>
+        <h3 className={`font-serif text-primary-foreground mb-3 ${size === 'large' ? 'text-3xl' : 'text-xl'}`}>
+          {title}
+        </h3>
+        
+        <p className={`text-primary-foreground/80 mb-4 leading-relaxed ${size === 'large' ? 'text-base' : 'text-sm'}`}>
+          {description}
+        </p>
 
-        <div className="space-y-3">
-          {highlights.map((highlight, index) => (
-            <div key={index} className="flex items-start gap-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
-              <span className="text-sm text-muted-foreground">{highlight}</span>
-            </div>
-          ))}
-        </div>
+        {size === 'large' && (
+          <div className="space-y-2 mt-2">
+            {highlights.map((highlight, index) => (
+              <div key={index} className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
+                <span className="text-sm text-primary-foreground/70">{highlight}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
