@@ -1,23 +1,33 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { usePortfolioSection } from "@/hooks/usePortfolioContent";
+
+interface NavLink {
+  href: string;
+  label: string;
+}
+
+const defaultNavLinks: NavLink[] = [
+  { href: "#about", label: "About Me" },
+  { href: "#pillars", label: "Growth & Strategy" },
+  { href: "#gallery", label: "Content Gallery" },
+  { href: "#projects", label: "Technical Projects" },
+  { href: "#contact", label: "Contact" },
+];
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: navContent } = usePortfolioSection("navigation");
 
-  const navLinks = [
-    { href: "#about", label: "About Me" },
-    { href: "#pillars", label: "Growth & Strategy" },
-    { href: "#gallery", label: "Content Gallery" },
-    { href: "#projects", label: "Technical Projects" },
-    { href: "#contact", label: "Contact" },
-  ];
+  const siteName = navContent?.metadata?.site_name || "Seraiah";
+  const navLinks: NavLink[] = navContent?.metadata?.nav_links || defaultNavLinks;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <a href="#" className="font-serif text-2xl font-medium tracking-tight text-primary">
-            Seraiah<span className="text-accent">.</span>
+            {siteName}<span className="text-accent">.</span>
           </a>
 
           {/* Desktop Navigation */}

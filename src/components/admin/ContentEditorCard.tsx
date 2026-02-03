@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Save, Image, Type, Link, FileText, Upload, Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Save, Image, Type, Link, FileText, Upload, Loader2, Code } from "lucide-react";
 import { PortfolioContent, useUpdatePortfolioContent } from "@/hooks/usePortfolioContent";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -21,6 +22,36 @@ const sectionLabels: Record<string, string> = {
   knowledge_header: "Knowledge Hub Header",
   contact: "Contact Section",
   footer: "Footer",
+  technical_skills: "Technical Skills Section",
+  navigation: "Navigation / Header",
+};
+
+// Sections that have editable metadata with specific schemas
+const metadataSchemas: Record<string, { label: string; description: string }> = {
+  technical_skills: {
+    label: "Skills Data (JSON)",
+    description: "Edit skills array: [{name, tools, icon}]. Icons: sparkles, database, search, mail, file-text",
+  },
+  navigation: {
+    label: "Navigation Data (JSON)",
+    description: "Edit site_name and nav_links: [{href, label}]",
+  },
+  hero: {
+    label: "Hero Metadata (JSON)",
+    description: "Edit badge text, secondary CTA link and text",
+  },
+  brands: {
+    label: "Brands Data (JSON)",
+    description: "Edit brands array",
+  },
+  pillars_header: {
+    label: "Header Metadata (JSON)",
+    description: "Edit label text",
+  },
+  knowledge_header: {
+    label: "Header Metadata (JSON)",
+    description: "Edit label text",
+  },
 };
 
 const ContentEditorCard = ({ content }: ContentEditorCardProps) => {
@@ -28,6 +59,7 @@ const ContentEditorCard = ({ content }: ContentEditorCardProps) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [metadataError, setMetadataError] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     headline: content.headline || "",
@@ -35,22 +67,60 @@ const ContentEditorCard = ({ content }: ContentEditorCardProps) => {
     image_url: content.image_url || "",
     cta_link: content.cta_link || "",
     cta_text: content.cta_text || "",
+    metadata: JSON.stringify(content.metadata || {}, null, 2),
   });
 
   const [hasChanges, setHasChanges] = useState(false);
 
+  const hasMetadataSchema = !!metadataSchemas[content.section_id];
+
   useEffect(() => {
+    const metadataChanged = formData.metadata !== JSON.stringify(content.metadata || {}, null, 2);
     const changed = 
       formData.headline !== (content.headline || "") ||
       formData.body_text !== (content.body_text || "") ||
       formData.image_url !== (content.image_url || "") ||
       formData.cta_link !== (content.cta_link || "") ||
-      formData.cta_text !== (content.cta_text || "");
+      formData.cta_text !== (content.cta_text || "") ||
+      metadataChanged;
     
     setHasChanges(changed);
   }, [formData, content]);
 
+  const validateMetadata = (value: string): boolean => {
+    try {
+      JSON.parse(value);
+      setMetadataError(null);
+      return true;
+    } catch (e) {
+      setMetadataError("Invalid JSON format");
+      return false;
+    }
+  };
+
+  const handleMetadataChange = (value: string) => {
+    setFormData({ ...formData, metadata: value });
+    validateMetadata(value);
+  };
+
   const handleSave = async () => {
+    // Validate metadata if it has a schema
+    if (hasMetadataSchema && !validateMetadata(formData.metadata)) {
+      toast({
+        title: "Invalid JSON",
+        description: "Please fix the metadata JSON before saving",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    let parsedMetadata = content.metadata;
+    try {
+      parsedMetadata = JSON.parse(formData.metadata);
+    } catch (e) {
+      // Keep original metadata if parsing fails
+    }
+
     await updateContent.mutateAsync({
       id: content.id,
       headline: formData.headline || null,
@@ -58,6 +128,7 @@ const ContentEditorCard = ({ content }: ContentEditorCardProps) => {
       image_url: formData.image_url || null,
       cta_link: formData.cta_link || null,
       cta_text: formData.cta_text || null,
+      metadata: parsedMetadata,
     });
   };
 
@@ -132,7 +203,7 @@ const ContentEditorCard = ({ content }: ContentEditorCardProps) => {
         </div>
         <Button
           onClick={handleSave}
-          disabled={!hasChanges || updateContent.isPending}
+          disabled={!hasChanges || updateContent.isPending || !!metadataError}
           className={`gap-2 ${hasChanges ? 'bg-accent text-accent-foreground hover:bg-accent/90' : ''}`}
           variant={hasChanges ? "default" : "outline"}
         >
@@ -168,6 +239,30 @@ const ContentEditorCard = ({ content }: ContentEditorCardProps) => {
             placeholder="Enter body text..."
           />
         </div>
+
+        {/* Metadata JSON Editor (only for sections with schemas) */}
+        {hasMetadataSchema && (
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2 text-sm font-medium">
+              <Code size={14} className="text-accent" />
+              {metadataSchemas[content.section_id].label}
+            </Label>
+            <p className="text-xs text-muted-foreground">
+              {metadataSchemas[content.section_id].description}
+            </p>
+            <Textarea
+              value={formData.metadata}
+              onChange={(e) => handleMetadataChange(e.target.value)}
+              placeholder="{}"
+              className={`bg-background border-border focus:border-accent font-mono text-sm min-h-[150px] ${
+                metadataError ? 'border-red-500 focus:border-red-500' : ''
+              }`}
+            />
+            {metadataError && (
+              <p className="text-xs text-red-500">{metadataError}</p>
+            )}
+          </div>
+        )}
 
         {/* Image URL / Upload */}
         <div className="space-y-2">
