@@ -53,8 +53,12 @@ const AboutMe = () => {
                 prose-p:text-foreground/80 prose-p:leading-relaxed
                 prose-strong:text-foreground prose-strong:font-semibold
                 prose-em:text-foreground/80
-                prose-ul:text-foreground/80 prose-ol:text-foreground/80
-                prose-li:text-foreground/80"
+                prose-ul:text-foreground/80 prose-ul:list-disc prose-ul:pl-6 prose-ul:my-4
+                prose-ol:text-foreground/80 prose-ol:list-decimal prose-ol:pl-6 prose-ol:my-4
+                prose-li:text-foreground/80 prose-li:my-1
+                [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-4
+                [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-4
+                [&_li]:my-1"
               dangerouslySetInnerHTML={{ __html: bodyText }}
             />
           </div>
