@@ -18,7 +18,7 @@ const StrategicPillars = () => {
           <div className="text-center mb-20">
             <span className="text-accent text-sm font-medium tracking-widest uppercase mb-4 block">{label}</span>
             <h2 className="font-serif text-5xl md:text-6xl font-semibold text-primary mb-8">{headline}</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">{bodyText}</p>
+            <div className="text-muted-foreground max-w-2xl mx-auto text-lg prose prose-p:m-0" dangerouslySetInnerHTML={{ __html: bodyText }} />
           </div>
           <div className="flex justify-center">
             <div className="animate-pulse text-muted-foreground">Loading projects...</div>
@@ -38,7 +38,7 @@ const StrategicPillars = () => {
         <div className="text-center mb-20">
           <span className="text-accent text-sm font-medium tracking-widest uppercase mb-4 block">{label}</span>
           <h2 className="font-serif text-5xl md:text-6xl font-semibold text-primary mb-8">{headline}</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">{bodyText}</p>
+          <div className="text-muted-foreground max-w-2xl mx-auto text-lg prose prose-p:m-0" dangerouslySetInnerHTML={{ __html: bodyText }} />
         </div>
 
         {/* Bento Grid */}
