@@ -13,6 +13,7 @@ interface ContentEditorCardProps {
 const sectionLabels: Record<string, string> = {
   hero: "Hero Section",
   about: "About Section",
+  about_me: "About Me Section",
   brands: "Brand Carousel",
   pillars_header: "Strategic Pillars Header",
   knowledge_header: "Knowledge Hub Header",

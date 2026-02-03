@@ -1,6 +1,7 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import BrandCarousel from "@/components/BrandCarousel";
+import AboutMe from "@/components/AboutMe";
 import StrategicPillars from "@/components/StrategicPillars";
 import KnowledgeHub from "@/components/KnowledgeHub";
 import TechnicalSkills from "@/components/TechnicalSkills";
@@ -13,6 +14,7 @@ const Index = () => {
       <Navigation />
       <Hero />
       <BrandCarousel />
+      <AboutMe />
       <StrategicPillars />
       <KnowledgeHub />
       <TechnicalSkills />
