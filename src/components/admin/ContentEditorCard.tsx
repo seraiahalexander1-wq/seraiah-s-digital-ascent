@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Save, Image, Type, Link, FileText, Upload, Loader2 } from "lucide-react";
 import { PortfolioContent, useUpdatePortfolioContent } from "@/hooks/usePortfolioContent";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import RichTextEditor from "./RichTextEditor";
 
 interface ContentEditorCardProps {
   content: PortfolioContent;
@@ -162,12 +162,10 @@ const ContentEditorCard = ({ content }: ContentEditorCardProps) => {
             <FileText size={14} className="text-accent" />
             Body Text
           </Label>
-          <Textarea
+          <RichTextEditor
             value={formData.body_text}
-            onChange={(e) => setFormData({ ...formData, body_text: e.target.value })}
+            onChange={(value) => setFormData({ ...formData, body_text: value })}
             placeholder="Enter body text..."
-            rows={3}
-            className="bg-background border-border focus:border-accent resize-none"
           />
         </div>
 
