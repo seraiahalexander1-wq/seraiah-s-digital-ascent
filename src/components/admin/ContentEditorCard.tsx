@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Image, Type, Link, FileText } from "lucide-react";
+import { Save, Image, Type, Link, FileText, Upload, Loader2 } from "lucide-react";
 import { PortfolioContent, useUpdatePortfolioContent } from "@/hooks/usePortfolioContent";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface ContentEditorCardProps {
   content: PortfolioContent;
@@ -23,6 +25,9 @@ const sectionLabels: Record<string, string> = {
 
 const ContentEditorCard = ({ content }: ContentEditorCardProps) => {
   const updateContent = useUpdatePortfolioContent();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
   
   const [formData, setFormData] = useState({
     headline: content.headline || "",
@@ -54,6 +59,63 @@ const ContentEditorCard = ({ content }: ContentEditorCardProps) => {
       cta_link: formData.cta_link || null,
       cta_text: formData.cta_text || null,
     });
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload an image file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please upload an image smaller than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${content.section_id}-${Date.now()}.${fileExt}`;
+      const filePath = `sections/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('portfolio-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('portfolio-images')
+        .getPublicUrl(filePath);
+
+      setFormData({ ...formData, image_url: publicUrl });
+      toast({ title: "Image uploaded successfully!" });
+    } catch (error: any) {
+      toast({
+        title: "Upload failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
   };
 
   return (
@@ -109,18 +171,41 @@ const ContentEditorCard = ({ content }: ContentEditorCardProps) => {
           />
         </div>
 
-        {/* Image URL */}
+        {/* Image URL / Upload */}
         <div className="space-y-2">
           <Label className="flex items-center gap-2 text-sm font-medium">
             <Image size={14} className="text-accent" />
-            Image URL
+            Image
           </Label>
-          <Input
-            value={formData.image_url}
-            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-            placeholder="https://..."
-            className="bg-background border-border focus:border-accent"
-          />
+          <div className="flex gap-2">
+            <Input
+              value={formData.image_url}
+              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+              placeholder="https://... or upload an image"
+              className="bg-background border-border focus:border-accent flex-1"
+            />
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              accept="image/*"
+              className="hidden"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading}
+              className="gap-2 shrink-0"
+            >
+              {isUploading ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <Upload size={16} />
+              )}
+              {isUploading ? "Uploading..." : "Upload"}
+            </Button>
+          </div>
           {formData.image_url && (
             <div 
               className="w-full h-24 rounded-lg bg-cover bg-center border border-border"
