@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
 import { useProjects, useDeleteProject, Project } from "@/hooks/useProjects";
 import { useArticles, useDeleteArticle, Article } from "@/hooks/useArticles";
 import { usePortfolioContent } from "@/hooks/usePortfolioContent";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit2, Trash2, LogOut, EyeOff, Layout, FileText, Briefcase } from "lucide-react";
+import { Plus, Edit2, Trash2, EyeOff, Layout, FileText, Briefcase } from "lucide-react";
 import ProjectForm from "@/components/admin/ProjectForm";
 import ArticleForm from "@/components/admin/ArticleForm";
 import ContentEditorCard from "@/components/admin/ContentEditorCard";
@@ -21,7 +20,6 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const Admin = () => {
-  const { signOut, user } = useAuth();
   const { data: projects, isLoading: projectsLoading } = useProjects(false);
   const { data: articles, isLoading: articlesLoading } = useArticles(false);
   const { data: portfolioContent, isLoading: contentLoading } = usePortfolioContent();
@@ -57,16 +55,9 @@ const Admin = () => {
             <span className="text-muted-foreground">|</span>
             <span className="text-sm text-accent font-medium">Admin Hub</span>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">{user?.email}</span>
-            <a href="/" target="_blank" className="text-sm text-accent hover:underline">
-              View Site →
-            </a>
-            <Button variant="outline" size="sm" onClick={signOut} className="gap-2">
-              <LogOut size={16} />
-              Sign Out
-            </Button>
-          </div>
+          <a href="/" target="_blank" className="text-sm text-accent hover:underline">
+            View Site →
+          </a>
         </div>
       </header>
 
