@@ -24,8 +24,8 @@ const ContactSection = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const label = contactContent?.metadata?.label || "Let's Connect";
-  const headline = contactContent?.headline || "Start a Conversation";
-  const bodyText = contactContent?.body_text || "Have a project in mind? Let's discuss how we can work together.";
+  const headline = contactContent?.headline || "Let's Work Together";
+  const bodyText = contactContent?.body_text || "Open to remote roles in content, writing, and marketing. Feel free to reach out.";
   const ctaText = contactContent?.cta_text || "Send Message";
 
   const handleSubmit = async (e: React.FormEvent) => {

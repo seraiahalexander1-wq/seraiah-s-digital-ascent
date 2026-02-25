@@ -11,7 +11,7 @@ const StrategicPillars = () => {
     data: headerContent
   } = usePortfolioSection("pillars_header");
   const label = headerContent?.metadata?.label || "What I Do";
-  const headline = headerContent?.headline || "Strategic Pillars";
+  const headline = headerContent?.headline || "What I've Built";
   const bodyText = headerContent?.body_text || "Three core competencies that drive results for high-stakes brands and complex challenges.";
   if (isLoading) {
     return <section id="pillars" className="py-32 relative">

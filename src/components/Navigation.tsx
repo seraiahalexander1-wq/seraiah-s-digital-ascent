@@ -9,9 +9,8 @@ interface NavLink {
 
 const defaultNavLinks: NavLink[] = [
   { href: "#about", label: "About Me" },
-  { href: "#pillars", label: "Growth & Strategy" },
+  { href: "#pillars", label: "Experience" },
   { href: "#gallery", label: "Content Gallery" },
-  { href: "#projects", label: "Technical Projects" },
   { href: "#contact", label: "Contact" },
 ];
 
