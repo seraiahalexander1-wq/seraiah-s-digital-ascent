@@ -6,7 +6,7 @@ const Hero = () => {
 
   // Fallback content while loading or if no data
   const headline = heroContent?.headline || "Content Editor. Writer. Marketer.";
-  const bodyText = heroContent?.body_text || "5+ years creating research-backed content across wellness, e-commerce, and education. 1,685+ Etsy orders. #1 Google rankings. Open to remote roles in content, writing, or marketing.";
+  const bodyText = heroContent?.body_text || "5+ years creating research-backed content across wellness, e-commerce, and education. 1,800+ Etsy orders. #1 Google rankings. Open to remote roles in content, writing, or marketing.";
   const badge = heroContent?.metadata?.badge || "Open to Remote Roles";
   const ctaLink = heroContent?.cta_link || "#pillars";
   const ctaText = heroContent?.cta_text || "View My Work";
